@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transport &amp; Area - SkyGuide AI</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Work+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "secondary-fixed": "#e0e3e5",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#ffffff", /* Changed for dark mode */
+                        "secondary": "#a0a4a8", /* Changed for dark mode */
+                        "on-tertiary": "#ffffff",
+                        "error": "#ffb4ab", /* Changed for dark mode */
+                        "on-primary-container": "#d6e3ff", /* Changed for dark mode */
+                        "on-primary-fixed": "#001b3c",
+                        "surface-dim": "#cfdaf2",
+                        "surface-container-low": "rgba(255,255,255,0.05)", /* Glassmorphism */
+                        "on-surface-variant": "#c3c6cf", /* Changed for dark mode */
+                        "surface-container": "rgba(255,255,255,0.1)", /* Glassmorphism */
+                        "primary": "#a7c8ff", /* Changed for dark mode */
+                        "on-secondary-fixed": "#191c1e",
+                        "secondary-container": "rgba(255,255,255,0.1)", /* Glassmorphism */
+                        "surface-container-lowest": "rgba(0,0,0,0.5)", /* Glassmorphism */
+                        "on-tertiary-container": "#8c9cb5",
+                        "surface-tint": "#a7c8ff", /* Changed for dark mode */
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#c4c7c9", /* Changed for dark mode */
+                        "outline": "rgba(255,255,255,0.2)", /* Glassmorphism */
+                        "surface-container-high": "rgba(255,255,255,0.15)", /* Glassmorphism */
+                        "inverse-primary": "#003366", /* Changed for dark mode */
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#d5e3ff",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "error-container": "#93000a", /* Changed for dark mode */
+                        "inverse-surface": "#ecf1ff", /* Changed for dark mode */
+                        "background": "#0b111e", /* Deep dark navy */
+                        "surface-variant": "rgba(255,255,255,0.1)", /* Glassmorphism */
+                        "tertiary-container": "#243448",
+                        "on-secondary-fixed-variant": "#444749",
+                        "on-background": "#ffffff", /* Changed for dark mode */
+                        "surface-container-highest": "rgba(255,255,255,0.2)", /* Glassmorphism */
+                        "surface-bright": "#f9f9ff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "primary-container": "rgba(0, 51, 102, 0.4)", /* Glassmorphism */
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "tertiary": "#0e1f32",
+                        "surface": "rgba(11, 17, 30, 0.7)", /* Glassmorphism */
+                        "outline-variant": "rgba(255,255,255,0.1)", /* Glassmorphism */
+                        "on-primary-fixed-variant": "#1f477b"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "xl": "32px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "sm": "8px"
+                    },
+                    fontFamily: {
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Work Sans"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Work Sans"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "500" }],
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "500" }],
+                        "headline-lg-mobile": ["28px", { lineHeight: "34px", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for chat area */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+        
+        /* Glassmorphism utilities */
+        .glass {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Chat bubble specifics from style guidance */
+        .bot-bubble {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff; /* on-surface */
+            max-width: 75%;
+        }
+        .user-bubble {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.8), rgba(0, 51, 102, 0.9));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(167, 200, 255, 0.2);
+            color: #ffffff; /* on-primary */
+            max-width: 75%;
+        }
+        
+        /* Interactive shadow for cards */
+        .card-hover:hover {
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(167, 200, 255, 0.2);
+            transform: translateY(-2px);
+            border-color: rgba(167, 200, 255, 0.4);
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #111c2d, #05080f);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row antialiased">
+<!-- Background glowing accents -->
+<div class="fixed top-[-10%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-primary/10 blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[-5%] w-[30vw] h-[30vw] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 glass-dark border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<!-- Hamburger menu for mobile context if needed, hidden on lg -->
+<button class="lg:hidden text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary drop-shadow-[0_0_10px_rgba(167,200,255,0.5)]">SkyGuide AI</h1>
+</div>
+<div class="flex items-center gap-md">
+<!-- Search implied on right -->
+<div class="hidden md:flex items-center glass px-3 py-1.5 rounded-full border border-outline-variant focus-within:border-primary focus-within:shadow-[0_0_10px_rgba(167,200,255,0.2)] transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-2">search</span>
+<input class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-48" placeholder="Search transport..." type="text"/>
+</div>
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full w-[320px] pt-20 pb-8 px-4 glass-dark z-40 border-r border-outline-variant">
+<div class="mb-8 px-4">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-primary drop-shadow-[0_0_8px_rgba(167,200,255,0.3)]">Airport Concierge</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Terminal 3 - Gates A-F</p>
+</div>
+<ul class="flex flex-col gap-2 flex-grow">
+<!-- Inactive -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-md text-label-md hover:text-on-surface" href="#">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+                    Flights
+                </a>
+</li>
+<!-- Inactive -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-md text-label-md hover:text-on-surface" href="#">
+<span class="material-symbols-outlined" data-icon="services">mobile_friendly</span>
+                    Facilities
+                </a>
+</li>
+<!-- Inactive -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-md text-label-md hover:text-on-surface" href="#">
+<span class="material-symbols-outlined" data-icon="luggage">luggage</span>
+                    Baggage
+                </a>
+</li>
+<!-- Active State: Transport -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/20 text-primary border border-primary/30 rounded-full font-label-md text-label-md scale-95 transition-transform duration-150 shadow-[0_0_15px_rgba(167,200,255,0.15)]" href="#">
+<span class="material-symbols-outlined" data-icon="directions_bus" style="font-variation-settings: 'FILL' 1;">directions_bus</span>
+                    Transport
+                </a>
+</li>
+<!-- Inactive -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-md text-label-md hover:text-on-surface" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                    Help
+                </a>
+</li>
+</ul>
+<div class="mt-auto px-4 mb-4">
+<button class="w-full py-3 border border-primary/50 text-primary font-label-md text-label-md rounded-full hover:bg-primary/20 transition-all flex items-center justify-center gap-2 glass">
+                Track a Flight
+            </button>
+</div>
+<div class="border-t border-outline-variant pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-md text-label-md hover:text-on-surface" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-highest transition-all font-label-md text-label-md hover:text-on-surface" href="#">
+<span class="material-symbols-outlined" data-icon="translate">translate</span>
+                Language
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="w-full pt-16 pb-[80px] lg:pb-0 lg:pl-[320px] h-screen flex flex-col relative z-0">
+<!-- Chat Interface Container -->
+<div class="flex-grow flex flex-col w-full max-w-[800px] mx-auto relative h-full">
+<!-- Chat Scroll Area -->
+<div class="flex-grow overflow-y-auto px-margin-mobile md:px-margin-desktop py-lg flex flex-col gap-lg pb-24">
+<!-- Area Context Map (Stylistic) -->
+<div class="w-full h-40 bg-cover bg-center rounded-xl glass shadow-sm relative overflow-hidden flex items-end p-4 mb-2" data-alt="A highly detailed, modern vector map of an airport terminal and surrounding ground transportation hub. Clean, light mode aesthetic using subtle cool grays, pristine whites, and primary blue routing lines. The style is professional, geometric, and designed for high legibility in a corporate travel application." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA0KI-iaQ0JYw8mWwrHpc2W6Pj16O6MWtPRg6IndyxyzNIgIRnLs-NV0fDYWRf2Vcf_rsLzgAXlJLcAYoG_o4E_mw_-T2xJmuNNK-6KK1ib5sZrxn6T6uG7wLYImXcfX5GByLd3DIyZJJun_RgtP2iR5PbAXsoY9gpEBnuW0CDB-15lPxTP0_zBnqqh5h4tm31hk6SYulDT38XI99EUJAazQoY1xshafLFRI1w4flflTbOy9mzEAgBI'); mix-blend-mode: screen; opacity: 0.8;">
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 to-background/20"></div>
+<div class="relative z-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Terminal 3 Ground Transport</h3>
+<p class="font-body-md text-body-md text-on-surface-variant drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Current Location</p>
+</div>
+</div>
+<!-- Timestamp -->
+<div class="text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider glass px-3 py-1 rounded-full">Today, 10:42 AM</span>
+</div>
+<!-- User Message -->
+<div class="flex justify-end w-full">
+<div class="user-bubble rounded-xl rounded-tr-none p-4 shadow-sm">
+<p class="font-body-md text-body-md">What are my fastest transport options to the city center? I need to leave within the next 30 minutes.</p>
+</div>
+</div>
+<!-- Bot Message -->
+<div class="flex justify-start w-full">
+<div class="bot-bubble rounded-xl rounded-tl-none p-4 shadow-sm">
+<p class="font-body-md text-body-md mb-3">I can help with that. The city center is approximately 15 miles away. Here are your options departing from Terminal 3 right now, sorted by speed:</p>
+<!-- Bento Grid for Transport Options -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full">
+<!-- Option 1: Express Train -->
+<div class="glass border border-outline-variant rounded-xl p-4 flex flex-col gap-3 card-hover transition-all cursor-pointer">
+<div class="flex justify-between items-start border-b border-surface-variant pb-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30 shadow-[0_0_10px_rgba(167,200,255,0.2)]">
+<span class="material-symbols-outlined text-[18px]">train</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Express Train</h4>
+</div>
+<span class="font-label-md text-label-md text-black bg-[#4ade80] px-2 py-1 rounded shadow-[0_0_10px_rgba(74,222,128,0.5)] font-bold">Fastest</span>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Est. Time</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">22 mins</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Next Dept.</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">10:55 AM</p>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Location</p>
+<p class="font-body-md text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Lower Level, Platform 1
+                                    </p>
+</div>
+</div>
+<!-- Option 2: Taxi Rank -->
+<div class="glass border border-outline-variant rounded-xl p-4 flex flex-col gap-3 card-hover transition-all cursor-pointer">
+<div class="flex justify-between items-start border-b border-surface-variant pb-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+<span class="material-symbols-outlined text-[18px]">local_taxi</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Official Taxi</h4>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Est. Time</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">35-45 mins</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Availability</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Immediate</p>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Location</p>
+<p class="font-body-md text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Exit 4, Arrivals Level
+                                    </p>
+</div>
+</div>
+<!-- Option 3: Ride Share -->
+<div class="glass border border-outline-variant rounded-xl p-4 flex flex-col gap-3 card-hover transition-all cursor-pointer">
+<div class="flex justify-between items-start border-b border-surface-variant pb-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+<span class="material-symbols-outlined text-[18px]">directions_car</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Ride Share App</h4>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Est. Time</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">35-45 mins</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Est. Wait</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">5-8 mins</p>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Location</p>
+<p class="font-body-md text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Level 2 Parking Garage, Zone C
+                                    </p>
+</div>
+</div>
+<!-- Option 4: Airport Shuttle Bus -->
+<div class="glass border border-outline-variant rounded-xl p-4 flex flex-col gap-3 card-hover transition-all cursor-pointer">
+<div class="flex justify-between items-start border-b border-surface-variant pb-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+<span class="material-symbols-outlined text-[18px]">directions_bus</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">City Shuttle</h4>
+</div>
+<span class="font-label-md text-label-md text-black bg-[#fbbf24] px-2 py-1 rounded shadow-[0_0_10px_rgba(251,191,36,0.5)] font-bold">Economy</span>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Est. Time</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">55 mins</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Next Dept.</p>
+<p class="font-body-md text-body-md font-semibold text-on-surface">11:00 AM</p>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase">Location</p>
+<p class="font-body-md text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Bus Bay 12, Arrivals
+                                    </p>
+</div>
+</div>
+</div>
+<!-- Quick Action Chips -->
+<div class="flex overflow-x-auto gap-2 mt-4 pb-2 no-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 glass border-primary/50 text-primary rounded-full font-label-md text-label-md hover:bg-primary/20 transition-all flex items-center gap-2 hover:shadow-[0_0_15px_rgba(167,200,255,0.2)]">
+<span class="material-symbols-outlined text-[16px]">confirmation_number</span> Buy Train Ticket
+                            </button>
+<button class="whitespace-nowrap px-4 py-2 glass border-primary/50 text-primary rounded-full font-label-md text-label-md hover:bg-primary/20 transition-all flex items-center gap-2 hover:shadow-[0_0_15px_rgba(167,200,255,0.2)]">
+<span class="material-symbols-outlined text-[16px]">map</span> View Walking Route
+                            </button>
+<button class="whitespace-nowrap px-4 py-2 glass border-primary/50 text-primary rounded-full font-label-md text-label-md hover:bg-primary/20 transition-all flex items-center gap-2 hover:shadow-[0_0_15px_rgba(167,200,255,0.2)]">
+<span class="material-symbols-outlined text-[16px]">local_parking</span> Parking Info instead
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Persistent Chat Input -->
+<div class="absolute bottom-0 w-full glass-dark border-t border-outline-variant p-4">
+<div class="max-w-[800px] mx-auto flex items-center glass border-outline-variant rounded-full px-4 py-2 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20 transition-all shadow-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-grow bg-transparent border-none outline-none font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant px-2" placeholder="Ask about routes, tickets, or parking..." type="text"/>
+<button class="text-primary hover:bg-primary/20 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined drop-shadow-[0_0_5px_rgba(167,200,255,0.5)]" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe glass-dark shadow-[0_-4px_24px_rgba(0,0,0,0.5)] border-t border-outline-variant rounded-t-[24px]">
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant p-2 rounded-xl transition-colors min-w-[64px] hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="flight_takeoff">flight_takeoff</span>
+<span class="font-label-sm text-label-sm">Flights</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant p-2 rounded-xl transition-colors min-w-[64px] hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="services">mobile_friendly</span>
+<span class="font-label-sm text-label-sm">Facilities</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant p-2 rounded-xl transition-colors min-w-[64px] hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="luggage">luggage</span>
+<span class="font-label-sm text-label-sm">Baggage</span>
+</a>
+<!-- Active -->
+<a class="flex flex-col items-center justify-center bg-primary/20 text-primary border border-primary/30 rounded-full px-4 py-1 scale-90 transition-transform min-w-[64px] shadow-[0_0_10px_rgba(167,200,255,0.2)]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="directions_bus" style="font-variation-settings: 'FILL' 1;">directions_bus</span>
+<span class="font-label-sm text-label-sm">Transport</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant p-2 rounded-xl transition-colors min-w-[64px] hover:text-on-surface" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="help">help</span>
+<span class="font-label-sm text-label-sm">Help</span>
+</a>
+</nav>
+</body></html>

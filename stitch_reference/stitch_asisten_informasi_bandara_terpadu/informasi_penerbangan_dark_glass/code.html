@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flight Information Screen - SkyGuide AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-accent": "#00d2ff",
+                        "secondary-accent": "#3a7bd5",
+                        "dark-bg": "#0f172a",
+                        "glass-surface": "rgba(30, 41, 59, 0.4)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                        "text-primary": "#ffffff",
+                        "text-secondary": "#cbd5e1",
+                        "status-success": "#10b981",
+                        "status-warning": "#f59e0b",
+                        "status-error": "#ef4444",
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Work Sans"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Work Sans"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for chat area */
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .glass-header {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .bg-gradient-glow {
+            background: radial-gradient(circle at top right, rgba(0, 210, 255, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(58, 123, 213, 0.15) 0%, transparent 40%),
+                        #0f172a;
+        }
+    </style>
+</head>
+<body class="bg-gradient-glow min-h-screen flex flex-col font-body-md text-text-primary selection:bg-primary-accent selection:text-white">
+<!-- TopAppBar -->
+<header class="glass-header fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
+<div class="flex items-center gap-4">
+<!-- Mobile Menu Toggle (Visible only on mobile) -->
+<button class="md:hidden text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="font-headline-md text-headline-md font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-secondary-accent">SkyGuide AI</div>
+</div>
+<!-- Desktop Navigation (Hidden on mobile) -->
+<nav class="hidden md:flex gap-8 items-center h-full">
+<!-- Active state logic applies to Flights based on page intent -->
+<a class="h-full flex items-center text-primary-accent font-bold border-b-2 border-primary-accent" href="#">
+<span class="font-label-md text-label-md">Flights</span>
+</a>
+<a class="h-full flex items-center text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors px-4" href="#">
+<span class="font-label-md text-label-md">Facilities</span>
+</a>
+<a class="h-full flex items-center text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors px-4" href="#">
+<span class="font-label-md text-label-md">Baggage</span>
+</a>
+<a class="h-full flex items-center text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors px-4" href="#">
+<span class="font-label-md text-label-md">Transport</span>
+</a>
+<a class="h-full flex items-center text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors px-4" href="#">
+<span class="font-label-md text-label-md">Help</span>
+</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex mt-16 pb-[80px] lg:pb-0 overflow-hidden relative">
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden lg:flex flex-col glass-panel fixed left-0 top-16 h-[calc(100vh-64px)] w-[320px] pt-8 pb-8 px-4 z-40 border-l-0 border-t-0 border-b-0 rounded-none">
+<div class="mb-8 px-4">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-text-primary">Airport Concierge</h2>
+<p class="font-body-md text-body-md text-text-secondary mt-1">Terminal 3 - Gates A-F</p>
+</div>
+<button class="bg-gradient-to-r from-primary-accent to-secondary-accent text-white font-label-md text-label-md rounded-full py-3 px-6 mb-8 hover:opacity-90 transition-opacity mx-4 shadow-lg shadow-primary-accent/20">
+                Track a Flight
+            </button>
+<nav class="flex-1 flex flex-col gap-2">
+<!-- Active state logic applies to Flights -->
+<a class="flex items-center gap-3 bg-glass-surface border border-glass-border text-primary-accent rounded-full px-4 py-3 scale-95 transition-transform duration-150 shadow-[0_0_15px_rgba(0,210,255,0.1)]" href="#">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+<span class="font-label-md text-label-md">Flights</span>
+</a>
+<a class="flex items-center gap-3 text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-all rounded-full px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="services">mobile_friendly</span>
+<span class="font-label-md text-label-md">Facilities</span>
+</a>
+<a class="flex items-center gap-3 text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-all rounded-full px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="luggage">luggage</span>
+<span class="font-label-md text-label-md">Baggage</span>
+</a>
+<a class="flex items-center gap-3 text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-all rounded-full px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="directions_bus">directions_bus</span>
+<span class="font-label-md text-label-md">Transport</span>
+</a>
+<a class="flex items-center gap-3 text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-all rounded-full px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Help</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-glass-border pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-all rounded-full px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-text-secondary hover:text-text-primary hover:bg-glass-surface transition-all rounded-full px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="translate">translate</span>
+<span class="font-label-md text-label-md">Language</span>
+</a>
+</div>
+</aside>
+<!-- Chat Canvas -->
+<section class="flex-1 flex flex-col w-full lg:ml-[320px] relative h-[calc(100vh-64px)] lg:h-[calc(100vh-64px)]">
+<!-- Quick Actions Header -->
+<div class="glass-header px-margin-mobile md:px-margin-desktop py-4 flex items-center overflow-x-auto whitespace-nowrap gap-3 shadow-md z-10 shrink-0 hide-scrollbar">
+<button class="glass-panel text-primary-accent font-label-md text-label-md px-4 py-2 rounded-full hover:bg-primary-accent hover:text-white hover:border-transparent transition-all flex items-center gap-2 border border-primary-accent/50 shadow-[0_0_10px_rgba(0,210,255,0.1)]">
+<span class="material-symbols-outlined text-[18px]" data-icon="flight_takeoff">flight_takeoff</span>
+                    Departures
+                </button>
+<button class="bg-transparent text-text-secondary font-label-md text-label-md border border-glass-border px-4 py-2 rounded-full hover:border-primary-accent hover:text-primary-accent transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="flight_land">flight_land</span>
+                    Arrivals
+                </button>
+<button class="bg-transparent text-text-secondary font-label-md text-label-md border border-glass-border px-4 py-2 rounded-full hover:border-primary-accent hover:text-primary-accent transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+                    Find Gate
+                </button>
+<button class="bg-transparent text-text-secondary font-label-md text-label-md border border-glass-border px-4 py-2 rounded-full hover:border-primary-accent hover:text-primary-accent transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="restaurant">restaurant</span>
+                    Dining Near Me
+                </button>
+</div>
+<!-- Chat Messages Area -->
+<div class="flex-1 overflow-y-auto chat-scroll px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-6 max-w-[800px] mx-auto w-full">
+<!-- Bot Welcome Message -->
+<div class="flex flex-col gap-1 items-start w-full max-w-[75%]">
+<div class="flex items-center gap-2 mb-1">
+<div class="w-8 h-8 rounded-full bg-secondary-accent/20 border border-secondary-accent/30 flex items-center justify-center text-primary-accent shadow-[0_0_10px_rgba(58,123,213,0.3)]">
+<span class="material-symbols-outlined text-[18px]" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary">SkyGuide</span>
+</div>
+<div class="glass-panel rounded-2xl rounded-tl-sm p-4 text-text-primary">
+<p class="font-body-md text-body-md">Hello! I'm your digital concierge. How can I help you navigate the airport today? You can search for a flight number, ask for gate directions, or check terminal facilities.</p>
+</div>
+</div>
+<!-- User Query -->
+<div class="flex flex-col gap-1 items-end w-full max-w-[75%] self-end mt-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-label-sm text-text-secondary">You</span>
+<div class="w-8 h-8 rounded-full glass-panel flex items-center justify-center text-text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="person">person</span>
+</div>
+</div>
+<div class="bg-gradient-to-br from-primary-accent to-secondary-accent text-white rounded-2xl rounded-tr-sm p-4 shadow-lg shadow-primary-accent/20">
+<p class="font-body-md text-body-md">Show me upcoming departures.</p>
+</div>
+</div>
+<!-- Bot Response - Flight List -->
+<div class="flex flex-col gap-1 items-start w-full mt-4">
+<div class="flex items-center gap-2 mb-1">
+<div class="w-8 h-8 rounded-full bg-secondary-accent/20 border border-secondary-accent/30 flex items-center justify-center text-primary-accent shadow-[0_0_10px_rgba(58,123,213,0.3)]">
+<span class="material-symbols-outlined text-[18px]" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-label-sm text-label-sm text-text-secondary">SkyGuide</span>
+</div>
+<div class="w-full flex flex-col gap-4">
+<!-- Flight Card 1 -->
+<div class="glass-panel rounded-xl p-4 hover:border-primary-accent/50 transition-colors group">
+<div class="flex justify-between items-start mb-4 border-b border-glass-border pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 backdrop-blur-sm p-1">
+<img class="w-full h-full object-contain rounded-full bg-white" data-alt="A clean, minimalist logo of a modern airline company featuring a stylized eagle wing in blue and white on a solid background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe5V6ITV-vrFnNckOP5pEdbs-6LkB2iuXEzuC7Io7LtfnfcZz1soYje_vw3e06klX2Xs3N1YI3TmBClp9R80d1Qhi55dRxaOupTRGqtHQfeljplzOgy8LxCFYO7BiS_bPhYdgrDUyQsAWpYgsxT-Asm4K6VjdDMvVWiMU7gVmpjlcOUhtPICku8q2-3RknjfEoTWq64cyEk51v4tdWB-XkSnKVj7h55VMEInyre6KeSnkwufLiNZ-Q"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-white group-hover:text-primary-accent transition-colors">London (LHR)</h3>
+<p class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">BA 285 • British Airways</p>
+</div>
+</div>
+<div class="text-right">
+<span class="inline-block bg-status-success/20 text-status-success border border-status-success/30 font-label-sm text-label-sm px-3 py-1 rounded-full mb-1 shadow-[0_0_10px_rgba(16,185,129,0.2)]">On Time</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div>
+<p class="font-label-sm text-label-sm text-text-secondary mb-1">Scheduled</p>
+<p class="font-headline-sm text-headline-sm text-white">14:30</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-text-secondary mb-1">Terminal</p>
+<p class="font-headline-sm text-headline-sm text-white flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px] text-primary-accent" data-icon="domain">domain</span> 3
+                                    </p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-text-secondary mb-1">Gate</p>
+<p class="font-headline-sm text-headline-sm text-white flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px] text-primary-accent" data-icon="door_open">door_open</span> A12
+                                    </p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-glass-border">
+<div class="flex items-center gap-3">
+<span class="font-label-sm text-label-sm text-text-secondary whitespace-nowrap">Boarding in 45 mins</span>
+<div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden border border-white/5">
+<div class="h-full bg-gradient-to-r from-primary-accent to-secondary-accent w-[30%] shadow-[0_0_10px_rgba(0,210,255,0.5)]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Flight Card 2 -->
+<div class="glass-panel rounded-xl p-4 hover:border-status-warning/50 transition-colors group">
+<div class="flex justify-between items-start mb-4 border-b border-glass-border pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 backdrop-blur-sm p-1">
+<img class="w-full h-full object-contain rounded-full bg-white" data-alt="A simple, elegant airline logo depicting a red stylized geometric plane tail against a white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaVzakS1bHrG7-il9B_fKJg1JsbMxV9F7jmK7mNGHnDmNADnExI4AFZaE7_TZmBqRABNBXp_eTi1Pimoj_IX_uamCQ7kyjJoVc77Nm-CEf8Ktzt9P0f6gORcjF-uHD72mf9Y1Mvw42q6rJPVXu3jPbTJjgApo7RXeq3W_guFUwQ76_0UZb3MYKF8Q0S4ltwppVjmS4kIka1s7Ggx2GsJNrX3tBMte_ISTXKFLsbMZC3O_B0k0fBGRO"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-white group-hover:text-status-warning transition-colors">Tokyo (NRT)</h3>
+<p class="font-label-sm text-label-sm text-text-secondary uppercase tracking-wider">JL 043 • Japan Airlines</p>
+</div>
+</div>
+<div class="text-right">
+<span class="inline-block bg-status-warning/20 text-status-warning border border-status-warning/30 font-label-sm text-label-sm px-3 py-1 rounded-full mb-1 shadow-[0_0_10px_rgba(245,158,11,0.2)]">Delayed</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div>
+<p class="font-label-sm text-label-sm text-text-secondary mb-1">Est. Time</p>
+<p class="font-headline-sm text-headline-sm text-status-warning">15:15</p>
+<p class="font-label-sm text-label-sm text-text-secondary/50 line-through text-[10px]">14:50</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-text-secondary mb-1">Terminal</p>
+<p class="font-headline-sm text-headline-sm text-white flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px] text-primary-accent" data-icon="domain">domain</span> 3
+                                    </p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-text-secondary mb-1">Gate</p>
+<p class="font-headline-sm text-headline-sm text-white flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px] text-primary-accent" data-icon="door_open">door_open</span> B04
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Input Area -->
+<div class="glass-header p-4 shrink-0 pb-safe md:pb-4 border-t-0 border-x-0">
+<div class="max-w-[800px] mx-auto relative flex items-center">
+<input class="w-full glass-panel border-glass-border rounded-full py-3 pl-5 pr-14 font-body-md text-body-md text-white focus:outline-none focus:border-primary-accent focus:ring-1 focus:ring-primary-accent transition-all placeholder:text-text-secondary/70 bg-transparent backdrop-blur-xl" placeholder="Type a flight number (e.g., BA 285) or ask a question..." type="text"/>
+<button class="absolute right-1.5 top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-primary-accent to-secondary-accent text-white rounded-full flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg shadow-primary-accent/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden glass-header fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe rounded-t-2xl border-x-0 border-b-0 border-t border-glass-border">
+<!-- Active state logic applies to Flights -->
+<a class="flex flex-col items-center justify-center bg-primary-accent/20 text-primary-accent border border-primary-accent/30 rounded-2xl px-4 py-1.5 scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+<span class="font-label-sm text-label-sm mt-1">Flights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary hover:text-white hover:bg-white/5 rounded-2xl px-2 py-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="services">mobile_friendly</span>
+<span class="font-label-sm text-label-sm mt-1">Facilities</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary hover:text-white hover:bg-white/5 rounded-2xl px-2 py-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="luggage">luggage</span>
+<span class="font-label-sm text-label-sm mt-1">Baggage</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary hover:text-white hover:bg-white/5 rounded-2xl px-2 py-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="directions_bus">directions_bus</span>
+<span class="font-label-sm text-label-sm mt-1">Transport</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary hover:text-white hover:bg-white/5 rounded-2xl px-2 py-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-sm text-label-sm mt-1">Help</span>
+</a>
+</nav>
+</body></html>
